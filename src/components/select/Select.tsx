@@ -1,9 +1,9 @@
 import { useState, useRef } from 'react';
 import type { MouseEventHandler } from 'react';
 import clsx from 'clsx';
-import { OptionType } from 'src/constants/articleProps';
 import { Text } from 'components/text';
 import { Spacing } from 'components/spacing';
+import { OptionType } from 'src/constants/articleProps';
 import arrowDown from 'src/images/arrow-down.svg';
 import { Option } from './Option';
 import { isFontFamilyClass } from './helpers/isFontFamilyClass';
@@ -27,6 +27,15 @@ export const Select = (props: SelectProps) => {
 	const rootRef = useRef<HTMLDivElement>(null);
 	const placeholderRef = useRef<HTMLDivElement>(null);
 
+	const handlePlaceHolderClick: MouseEventHandler<HTMLDivElement> = () => {
+		setIsOpen((isOpen) => !isOpen);
+	};
+
+	const handleOptionClick = (option: OptionType) => {
+		setIsOpen(false);
+		onChange?.(option);
+	};
+
 	useOutsideClickClose({
 		isOpen,
 		rootRef,
@@ -38,14 +47,6 @@ export const Select = (props: SelectProps) => {
 		placeholderRef,
 		onChange: setIsOpen,
 	});
-
-	const handleOptionClick = (option: OptionType) => {
-		setIsOpen(false);
-		onChange?.(option);
-	};
-	const handlePlaceHolderClick: MouseEventHandler<HTMLDivElement> = () => {
-		setIsOpen((isOpen) => !isOpen);
-	};
 
 	return (
 		<div>

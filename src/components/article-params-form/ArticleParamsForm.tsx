@@ -1,28 +1,25 @@
 import { useState } from 'react';
 import clsx from 'clsx';
-import arrow from 'src/images/arrow.svg';
 import { Button } from 'components/button';
 import { Select } from 'components/select';
 import { RadioGroup } from 'components/radio-group';
 import { Separator } from 'components/separator';
 import { Text } from 'components/text';
-import { ArrowButton } from '../arrow-button';
 import { Spacing } from 'components/spacing';
+import { ArrowButton } from '../arrow-button';
 import { defaultArticleState, ArticleStateType } from 'src/constants/articleProps';
 import { fontFamilyOptions, fontColors, backgroundColors, contentWidthArr, fontSizeOptions } from 'src/constants/articleProps';
+import arrow from 'src/images/arrow.svg';
 
 import styles from './ArticleParamsForm.module.scss';
-
-interface ArticleParamsFormProps {
-	onApply: (state: ArticleStateType) => void;
-}
 
 export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [formState, setFormState] = useState<ArticleStateType>(defaultArticleState);
 	
-	const handleToggle = () => {
-		setIsOpen(!isOpen);
+	const handleReset = () => {
+		setFormState(defaultArticleState);
+		onApply(defaultArticleState);
 	};
 
 	const handleSubmit = (e: React.FormEvent) => {
@@ -30,9 +27,8 @@ export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 		onApply(formState);
 	};
 
-	const handleReset = () => {
-		setFormState(defaultArticleState);
-		onApply(defaultArticleState);
+	const handleToggle = () => {
+		setIsOpen(!isOpen);
 	};
 
 	return (
@@ -46,19 +42,18 @@ export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 					<Spacing size={50} />
 					
 					<Select
+						title="Цвет фона"
+						selected={formState.backgroundColor}
+						options={backgroundColors}
+						onChange={(option) => setFormState({ ...formState, backgroundColor: option })}
+					/>
+					<Spacing size={50} />
+					
+					<Select
 						title="Шрифт"
 						selected={formState.fontFamilyOption}
 						options={fontFamilyOptions}
 						onChange={(option) => setFormState({ ...formState, fontFamilyOption: option })}
-					/>
-					<Spacing size={50} />
-					
-					<RadioGroup
-						name="fontSize"
-						title="Размер шрифта"
-						selected={formState.fontSizeOption}
-						options={fontSizeOptions}
-						onChange={(option) => setFormState({ ...formState, fontSizeOption: option })}
 					/>
 					<Spacing size={50} />
 					
@@ -70,11 +65,12 @@ export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 					/>
 					<Spacing size={50} />
 					
-					<Select
-						title="Цвет фона"
-						selected={formState.backgroundColor}
-						options={backgroundColors}
-						onChange={(option) => setFormState({ ...formState, backgroundColor: option })}
+					<RadioGroup
+						name="fontSize"
+						title="Размер шрифта"
+						selected={formState.fontSizeOption}
+						options={fontSizeOptions}
+						onChange={(option) => setFormState({ ...formState, fontSizeOption: option })}
 					/>
 					<Spacing size={50} />
 					
@@ -90,11 +86,15 @@ export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 					<Spacing size={50} />
 					
 					<div className={styles.bottomContainer}>
-						<Button title="Сбросить" type="reset" />
 						<Button title="Применить" type="submit" />
+						<Button title="Сбросить" type="reset" />
 					</div>
 				</form>
 			</aside>
 		</>
 	);
 };
+
+interface ArticleParamsFormProps {
+	onApply: (state: ArticleStateType) => void;
+}
